@@ -350,8 +350,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:5000/api/products";
-const ORDER_API = "http://localhost:5000/api/orders";
+const API = "http://ecommerce-jlg9.onrender.com/api/products";
+const ORDER_API = "http://ecommerce-jlg9.onrender.com/api/orders";
 
 export default function AdminDashboard() {
   const token = JSON.parse(localStorage.getItem("user"))?.token;

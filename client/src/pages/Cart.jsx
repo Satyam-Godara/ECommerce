@@ -408,7 +408,7 @@ export default function Cart() {
       setWarning("");
 
       const res = await axios.post(
-        "http://localhost:5000/api/products/check-stock",
+        "http://ecommerce-jlg9.onrender.com/api/products/check-stock",
         {
           // ⭐ backend expects product + qty
           items: cart.map(i => ({

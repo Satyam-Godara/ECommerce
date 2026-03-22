@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api/auth';
+const API = 'http://ecommerce-jlg9.onrender.com/api/auth';
 
 export const register = (data) => axios.post(`${API}/register`, data);
 

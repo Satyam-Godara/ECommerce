@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/orders";
+const API = "http://ecommerce-jlg9.onrender.com/api/orders";
 
 const getToken = () =>
   JSON.parse(localStorage.getItem("user"))?.token;
