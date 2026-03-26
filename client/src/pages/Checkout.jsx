@@ -8,7 +8,7 @@ export default function Checkout() {
   const { cart, total, clearCart } = useCart();
 
   // =========================
-  // 🔹 Shipping form state
+  // Shipping state
   // =========================
   const [shipping, setShipping] = useState({
     name: "",
@@ -24,7 +24,7 @@ export default function Checkout() {
   };
 
   // =========================
-  // 🔹 Razorpay Payment
+  // Payment
   // =========================
   const payNow = async () => {
     try {
@@ -39,7 +39,6 @@ export default function Checkout() {
         return alert("Please fill shipping details");
       }
 
-      // Step 1 — create razorpay order
       const { data } = await createOrder({ items: cart, total });
 
       const options = {
@@ -50,7 +49,6 @@ export default function Checkout() {
 
         handler: async function (response) {
           try {
-            // Step 2 — verify payment + save order
             await verifyPayment({
               ...response,
               items: cart.map((item) => ({
@@ -61,11 +59,10 @@ export default function Checkout() {
                 image: item.image,
               })),
               total,
-              shippingInfo: shipping, // ✅ NEW
+              shippingInfo: shipping,
             });
 
             clearCart();
-
             alert("✅ Order placed successfully");
             navigate("/orders");
           } catch {
@@ -82,87 +79,106 @@ export default function Checkout() {
   };
 
   // =========================
-  // 🔹 UI
+  // UI
   // =========================
   return (
-    <div className="max-w-4xl mx-auto p-6 grid md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-[#fdf6ee] px-4 sm:px-6 md:px-12 lg:px-20 py-8 sm:py-12">
 
-      {/* LEFT — Shipping */}
-      <div className="bg-white p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-bold mb-4">🚚 Shipping Details</h2>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
 
-        <input
-          name="name"
-          placeholder="Full Name"
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 rounded"
-        />
+        {/* ================= LEFT: SHIPPING ================= */}
+        <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-md">
 
-        <input
-          name="phone"
-          placeholder="Mobile Number"
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 rounded"
-        />
+          <h2 className="text-lg sm:text-xl font-bold mb-4 text-[#5e3e2d]">
+            🚚 Shipping Details
+          </h2>
 
-        <textarea
-          name="address"
-          placeholder="Full Address"
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 rounded"
-        />
+          <div className="space-y-3">
 
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            name="city"
-            placeholder="City"
-            onChange={handleChange}
-            className="border p-2 rounded"
-          />
+            <input
+              name="name"
+              placeholder="Full Name"
+              onChange={handleChange}
+              className="border p-2.5 w-full rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-[#8c5a3c]"
+            />
 
-          <input
-            name="state"
-            placeholder="State"
-            onChange={handleChange}
-            className="border p-2 rounded"
-          />
+            <input
+              name="phone"
+              placeholder="Mobile Number"
+              onChange={handleChange}
+              className="border p-2.5 w-full rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-[#8c5a3c]"
+            />
+
+            <textarea
+              name="address"
+              placeholder="Full Address"
+              onChange={handleChange}
+              className="border p-2.5 w-full rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-[#8c5a3c]"
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input
+                name="city"
+                placeholder="City"
+                onChange={handleChange}
+                className="border p-2.5 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-[#8c5a3c]"
+              />
+
+              <input
+                name="state"
+                placeholder="State"
+                onChange={handleChange}
+                className="border p-2.5 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-[#8c5a3c]"
+              />
+            </div>
+
+            <input
+              name="pincode"
+              placeholder="Pincode"
+              onChange={handleChange}
+              className="border p-2.5 w-full rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-[#8c5a3c]"
+            />
+          </div>
         </div>
 
-        <input
-          name="pincode"
-          placeholder="Pincode"
-          onChange={handleChange}
-          className="border p-2 w-full mt-3 rounded"
-        />
-      </div>
+        {/* ================= RIGHT: SUMMARY ================= */}
+        <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-md flex flex-col">
 
+          <h2 className="text-lg sm:text-xl font-bold mb-4 text-[#5e3e2d]">
+            🛒 Order Summary
+          </h2>
 
-      {/* RIGHT — Summary */}
-      <div className="bg-white p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-bold mb-4">🛒 Order Summary</h2>
+          <div className="space-y-2 text-sm sm:text-base flex-grow">
 
-        {cart.map((item) => (
-          <div
-            key={item._id}
-            className="flex justify-between mb-2 text-sm"
-          >
-            <span>{item.title} × {item.qty}</span>
-            <span>₹ {item.price * item.qty}</span>
+            {cart.map((item) => (
+              <div
+                key={item._id}
+                className="flex justify-between"
+              >
+                <span className="line-clamp-1">
+                  {item.title} × {item.qty}
+                </span>
+
+                <span>₹ {item.price * item.qty}</span>
+              </div>
+            ))}
+
           </div>
-        ))}
 
-        <hr className="my-4" />
+          <hr className="my-4" />
 
-        <h3 className="text-lg font-semibold mb-4">
-          Total: ₹ {total}
-        </h3>
+          <h3 className="text-base sm:text-lg font-semibold mb-4">
+            Total: ₹ {total}
+          </h3>
 
-        <button
-          onClick={payNow}
-          className="bg-green-900 text-white w-full py-3 rounded-xl hover:bg-green-800 transition"
-        >
-          Pay Now
-        </button>
+          <button
+            onClick={payNow}
+            className="w-full bg-[#355e3b] hover:bg-[#24492b] text-white py-3 rounded-xl text-sm sm:text-base font-semibold transition-all active:scale-95"
+          >
+            Pay Now
+          </button>
+
+        </div>
       </div>
     </div>
   );
