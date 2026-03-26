@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import { Navigate } from "react-router-dom";
 
 
 // function Home() {
@@ -23,7 +24,6 @@ export default function App() {
     <>
       <Navbar/>
       <Routes>
-        <Route path="*" element={<Navigate to="/" />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -33,6 +33,7 @@ export default function App() {
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>}/>
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
     // </BrowserRouter>
